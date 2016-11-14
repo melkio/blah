@@ -31,6 +31,7 @@
             $("#btnSend").click(function () {
                 if (ws.readyState == WebSocket.OPEN) {
                     ws.send($("#textInput").val());
+                    $("#textInput").val('');
                 }
                 else {
                     $("#spanStatus").text("Connection is closed");

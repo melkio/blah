@@ -31,7 +31,7 @@ namespace Demo02
                 var result = await socket.ReceiveAsync(buffer, CancellationToken.None);
                 if (socket.State == WebSocketState.Open)
                 {
-                    var message = $"{account}: {Encoding.UTF8.GetString(buffer.Array, 0, result.Count)} [{DateTime.Now.ToString()}]";
+                    var message = $"<i>{account}</i>: <strong>{Encoding.UTF8.GetString(buffer.Array, 0, result.Count)}</strong> [{DateTime.Now.ToString()}]";
                     await Broadcast(message);
                 }
                 else

@@ -35,7 +35,7 @@ namespace Demo01
                 var result = await socket.ReceiveAsync(buffer, CancellationToken.None);
                 if (socket.State == WebSocketState.Open)
                 {
-                    var message = $"You sent message: {Encoding.UTF8.GetString(buffer.Array, 0, result.Count)} at {DateTime.Now.ToString()}";
+                    var message = $"You sent message: <strong>{Encoding.UTF8.GetString(buffer.Array, 0, result.Count)}</strong> at {DateTime.Now.ToString()}";
                     await socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(message)), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
                 else

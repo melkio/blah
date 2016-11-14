@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.1.js"></script>
+    <script src="signalr/hubs"></script>
+    <script type="text/javascript">
+        $().ready(function () {
+            var chat = $.connection.chatHub;
+
+            chat.client.broadcast = function (message) {
+                $("#spanStatus")
+                    .append("<br />")
+                    .append(message);
+            };
+
+            $.connection.hub.start().done(function () {
+                $('#btnSend').click(function () {
+                    chat.server.send($('#textAccount').val(), $('#textInput').val());
+                    $('#textInput').val('').focus();
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <input type="text" id="textAccount" />
+    <input type="text" id="textInput" />
+    <input type="button" value="Send" id="btnSend" /><br />
+    <span id="spanStatus" />
+</body>
+</html>

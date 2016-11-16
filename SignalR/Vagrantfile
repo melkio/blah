@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  # For a complete reference of configuration options, 
+  # please see the online documentation at https://docs.vagrantup.com.
+
+  config.vm.box = "ubuntu/trusty64"
+
+  #mongodb
+  config.vm.network "forwarded_port", guest: 27017, host: 27017
+  #rabbitmq
+  config.vm.network "forwarded_port", guest: 5672, host: 5672
+  config.vm.network "forwarded_port", guest: 15672, host: 15672
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "src/frontend", "/api"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "signalr"
+    vb.memory = 2048
+    vb.cpus = 2
+  end
+
+  config.vm.provision "shell", path: "mongodb.sh"
+  config.vm.provision "shell", path: "rabbitmq.sh"
+end

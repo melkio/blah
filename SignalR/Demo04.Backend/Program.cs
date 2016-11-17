@@ -18,8 +18,7 @@ namespace Demo04.Backend
 
                 config.ReceiveEndpoint(host, "backend", endpoint =>
                 {
-                    endpoint.Consumer<CommandStoreConsumer>();
-                    endpoint.Consumer<CreateRoomCommandConsumer>();
+                    endpoint.Consumer<PostChatMessageConsumer>();
                 });
             });
 

@@ -69,14 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
-    <Compile Include="Commands\CreateRoomCommand.cs" />
-    <Compile Include="Commands\PostMessageCommand.cs" />
+    <Compile Include="Commands\PostChatMessageCommand.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="Messages\CommandFailedMessage.cs" />
-    <Compile Include="Messages\CommandHandledMessage.cs" />
+    <Compile Include="Messages\ChatMessagePostedMessage.cs" />
+    <Compile Include="Messages\Message.cs" />
     <Compile Include="Models\ChatMessage.cs" />
-    <Compile Include="Models\CommandDescriptor.cs" />
-    <Compile Include="Models\Room.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

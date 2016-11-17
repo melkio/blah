@@ -21,7 +21,7 @@ namespace Demo04.Frontend
 
                 config.ReceiveEndpoint(host, "frontend", endpoint =>
                 {
-                    endpoint.Consumer<CommandNotificationConsumer>();
+                    endpoint.Consumer<ChatMessagePostedConsumer>();
                 });
             });
 

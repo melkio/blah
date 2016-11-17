@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using Owin;
 using System.Web.Http;
 
@@ -14,6 +15,8 @@ namespace Demo04.Frontend
             config.MapHttpAttributeRoutes();
 
             app.UseWebApi(config);
+
+            //GlobalHost.DependencyResolver.UseRedis("localhost", 6379, string.Empty, "PlasticChat");
             app.MapSignalR();
 
             ServiceBus.Initialize();

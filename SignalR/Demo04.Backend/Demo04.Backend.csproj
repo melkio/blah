@@ -79,8 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Consumers\CommandStoreConsumer.cs" />
-    <Compile Include="Consumers\CreateRoomCommandConsumer.cs" />
+    <Compile Include="Consumers\PostChatMessageConsumer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

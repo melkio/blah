@@ -20,88 +20,70 @@
     <script type="text/javascript">
         $().ready(function () {
 
-            var loadRooms = function () {
-                $("#roomsTable").find("tr:gt(0)").remove();
-
-                $.ajax({
-                    type: "GET",
-                    url: "/api/rooms"
-                }).done(function (result) {
-                    _.forEach(result, function (item) {
-                        var row = $("<tr />");
-                        $("#roomsTable").append(row);
-
-                        row.append($("<td>" + item.Name + "</td>"));
-                        row.append($("<td>" + item.Owner + "</td>"));
-                    });
-                });
-            };
-
-            var user = '';
+            var settings = { account: '', room: '' };
             var pendingCommands = [];
 
-            var hub = $.connection.commandNotificationHub;
+            var hub = $.connection.notificationHub;
 
-            hub.client.commandFailed = function (commandId, errorMessage) {
-                toastr.error(errorMessage);
-                _.remove(pendingCommands, function (item) {
-                    return item.id === commandId;
-                });
-            };
+            hub.client.newAccount = function (account, room) {
+                toastr.info(account + " joined " + room + " room");
+            }
 
-            hub.client.commandHandled = function (commandId) {
-                var command = _.filter(pendingCommands, function (item) {
-                    return item.id === commandId;
-                });
-                toastr.success(command[0].message);
-                command[0].action();
+            hub.client.newMessage = function (account, occurredOn, text) {
+                var row = $("<li><strong>" + account + "</strong>: " + text + "</li>");
+                $("#messages").append(row);
+            }
 
-                _.remove(pendingCommands, function (item) {
-                    return item.id === commandId;
-                });
-            };
+            hub.client.newMessageFromOthers = function (room) {
+                if (room != settings.room) {
+                    var count = parseInt($("#messageCount").html(), 10);
+                    $("#messageCount").html(count + 1);
+                }
+            }
 
             $.connection.hub.start()
                 .done(function () {
 
-                    $("#newRoomCommand").click(function () {
+                    $("#join").click(function () {
+                        hub.server.unjoin(settings.room);
+
+                        settings.room = $("#room").val();
+                        settings.account = $("#account").val();
+                        hub.server.join(settings.account, settings.room);
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/api/messages/" + settings.room
+                        }).done(function (messages) {
+                            $("#messages").find("li").remove();
+
+                            _.forEach(messages, function (message) {
+                                var row = $("<li><strong>" + message.Account + "</strong>: " + message.Text +"</li>");
+                                $("#messages").append(row);
+                            });
+                        });
+                    });
+
+                    $("#sendMessage").click(function () {
                         var command = {
-                            name: $("#newRoomText").val(),
-                            owner: user
+                            account: settings.account,
+                            room: settings.room,
+                            text: $("#message").val()
                         };
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify(command),
-                            url: "/api/commands",
+                            url: "/api/messages",
                             contentType: "application/json"
-                        }).done(function (result) {
-                            var command = {
-                                id: result.CommandId,
-                                message: "'Room' creata con successo",
-                                action: function () {
-                                    loadRooms();
-                                }
-                            };
-                            pendingCommands.push(command);
                         });
                     });
-
-                    $("#loginButton").click(function () {
-                        user = $("#usernameText").val();
-                        hub.server.register(user);
-
-                        $("#loginModal").modal("hide");
-                        loadRooms();
-                    });
-
-                    $("#loginModal").modal("show");
                 });
         });
     </script>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                     <span class="sr-only">Toggle navigation</span>
@@ -111,49 +93,50 @@
                 </button>
                 <a class="navbar-brand" href="#">Plastic chat</a>
             </div>
+            <p class="navbar-text ">
+                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                <span id="messageCount" class="badge">0</span>
+            </p>
         </div>
     </nav>
     <div class="container" style="margin-top:80px">
 
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#rooms" aria-controls="home" role="tab" data-toggle="tab">Rooms</a></li>
-            <li role="presentation"><a href="#chat" aria-controls="profile" role="tab" data-toggle="tab">Chat</a></li>
-        </ul>
-
-        <div class="tab-content" style="margin-top:30px">
-            <div role="tabpanel" class="tab-pane active" id="rooms">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="input-group">
-                            <input id="newRoomText" type="text" class="form-control" placeholder="Room name">
-                            <span class="input-group-btn">
-                                <button id="newRoomCommand" class="btn btn-default" type="button">Ok</button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="margin-top:10px">
-                    <div class="col-lg-8">
-                        <table id="roomsTable" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Owner</th>
-                                </tr>
-                            </thead>
-                            <tbody ></tbody>
-                        </table>
-                    </div>
-                </div>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-lg-3">
+                <input id="account" type="text" class="form-control" placeholder="Account"> 
+            </div> 
+            <div class="col-lg-3">
+                <input id="room" type="text" class="form-control" placeholder="Room name...">
             </div>
-            <div role="tabpanel" class="tab-pane" id="chat">Chat</div>
+            <button id="join" class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <input id="message" type="text" class="form-control" placeholder="New message..."> 
+            </div>
+            <button id="sendMessage" class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <div class="page-header">
+            <h3>Messages</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <ul id="messages" />
+            </div>
         </div>
     </div>
 </body>
 </html>
 
 <!-- Modal -->
-<div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!--<div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -174,6 +157,6 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 

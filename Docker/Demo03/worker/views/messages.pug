@@ -1,0 +1,15 @@
+html
+  head
+    title= title
+  body
+    h1 Messages
+    table
+      thead
+        tr
+          th data
+          th timestamp
+      tbody
+        each doc in docs
+          tr
+            td= doc.data
+            td= doc.timestamp

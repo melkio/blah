@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace HttpCache.Items
             var result = await ActorEnvironment.Current.ItemsGateway.Ask<CreateItemResponse>(message);
 
             var response = Request.CreateResponse(HttpStatusCode.Created);
+            response.Headers.Location = new Uri($"api/items/{result.Id}", UriKind.Relative);
             response.Headers.ETag = new EntityTagHeaderValue(string.Concat("\"", result.ETag, "\"" ));
 
             return response;

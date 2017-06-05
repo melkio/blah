@@ -7,6 +7,8 @@ namespace HttpCache.Items
 {
     public class ItemActor : ReceiveActor
     {
+        private string id;
+
         public ItemActor()
         {
             Receive<CreateItemRequest>(message => HandleCreateItem(message));
@@ -16,7 +18,12 @@ namespace HttpCache.Items
         {
             var eTag = ComputeETag(message.Code, message.Description, message.Value);
 
-            Sender.Tell(new CreateItemResponse(eTag));
+            Sender.Tell(new CreateItemResponse(id, eTag));
+        }
+
+        public override void AroundPreStart()
+        {
+            id = Self.Path.Name;
         }
 
         private static string ComputeETag(int code, string description, double value)

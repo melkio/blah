@@ -8,17 +8,22 @@ namespace HttpCache.Items
 {
     public class ItemActor : ReceiveActor
     {
+        private readonly IActorRef store;
+
         private string id;
 
-        public ItemActor()
+        public ItemActor(IActorRef store)
         {
+            this.store = store;
+
             Receive<CreateItemRequest>(message => HandleCreateItem(message));
         }
 
-        private void HandleCreateItem(CreateItemRequest message)
+        private void HandleCreateItem(CreateItemRequest request)
         {
-            var eTag = ComputeETag(message.Code, message.Description, message.Value);
+            var eTag = ComputeETag(request.Code, request.Description, request.Value);
 
+            store.Tell(new StoreItem(id, request.Code, request.Description, request.Value, eTag));
             Sender.Tell(new CreateItemResponse(id, eTag));
         }
 

@@ -16,7 +16,8 @@ namespace HttpCache.Items
         {
             counter++;
 
-            var actor = Context.ActorOf<ItemActor>($"{counter}");
+            var props = Props.Create(() => new ItemActor(ActorEnvironment.Current.ItemsStore));
+            var actor = Context.ActorOf(props, $"{counter}");
             actor.Forward(message);
         }
     }

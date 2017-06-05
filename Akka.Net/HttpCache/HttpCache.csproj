@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorEnvironment.cs" />
+    <Compile Include="Items\InMemoryItemsStoreActor.cs" />
     <Compile Include="Items\ItemActor.cs" />
     <Compile Include="Items\ItemsController.Models.cs" />
     <Compile Include="Items\ItemsController.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="EchoController.cs" />
     <Compile Include="Items\Messages\CreateItemRequest.cs" />
     <Compile Include="Items\Messages\CreateItemResponse.cs" />
+    <Compile Include="Items\Messages\StoreItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using Akka.Actor;
+using HttpCache.Items.Messages;
 
 namespace HttpCache.Items
 {

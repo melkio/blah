@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using HttpCache.Items.Messages;
 
 namespace HttpCache.Items
 {

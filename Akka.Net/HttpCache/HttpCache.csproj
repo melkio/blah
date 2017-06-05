@@ -121,7 +121,8 @@
     <Compile Include="Items\ItemsController.cs" />
     <Compile Include="Items\ItemsGatewayActor.cs" />
     <Compile Include="EchoController.cs" />
-    <Compile Include="Items\Messages.cs" />
+    <Compile Include="Items\Messages\CreateItemRequest.cs" />
+    <Compile Include="Items\Messages\CreateItemResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

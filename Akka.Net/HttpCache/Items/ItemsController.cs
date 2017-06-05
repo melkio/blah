@@ -17,8 +17,8 @@ namespace HttpCache.Items
             if (!ModelState.IsValid)
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
 
-            var message = new ItemsGatewayActor.CreateItemRequest(payload.Code, payload.Description, payload.Value);
-            var result = await ActorEnvironment.Current.ItemsGateway.Ask<ItemsGatewayActor.CreateItemResponse>(message);
+            var message = new CreateItemRequest(payload.Code, payload.Description, payload.Value);
+            var result = await ActorEnvironment.Current.ItemsGateway.Ask<CreateItemResponse>(message);
 
             var response = Request.CreateResponse(HttpStatusCode.Created);
             response.Headers.ETag = new EntityTagHeaderValue(string.Concat("\"", result.ETag, "\"" ));

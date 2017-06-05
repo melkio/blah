@@ -116,11 +116,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorEnvironment.cs" />
-    <Compile Include="Items\ItemsGatewayActor.Messages.cs" />
     <Compile Include="Items\ItemsController.Models.cs" />
     <Compile Include="Items\ItemsController.cs" />
     <Compile Include="Items\ItemsGatewayActor.cs" />
     <Compile Include="EchoController.cs" />
+    <Compile Include="Items\Messages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

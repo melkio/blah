@@ -2,7 +2,7 @@
 
 namespace HttpCache.Items
 {
-    public partial class ItemsGatewayActor : ReceiveActor
+    public class ItemsGatewayActor : ReceiveActor
     {
         public ItemsGatewayActor()
         {

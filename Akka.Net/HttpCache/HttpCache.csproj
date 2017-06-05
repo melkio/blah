@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorEnvironment.cs" />
+    <Compile Include="Items\ItemActor.cs" />
     <Compile Include="Items\ItemsController.Models.cs" />
     <Compile Include="Items\ItemsController.cs" />
     <Compile Include="Items\ItemsGatewayActor.cs" />

@@ -4,6 +4,8 @@ namespace HttpCache.Items
 {
     public class ItemsGatewayActor : ReceiveActor
     {
+        private int counter = 0;
+
         public ItemsGatewayActor()
         {
             Receive<CreateItemRequest>(message => HandleCreateItem(message));
@@ -11,7 +13,10 @@ namespace HttpCache.Items
 
         private void HandleCreateItem(CreateItemRequest message)
         {
-            Sender.Tell(new CreateItemResponse("ABCDEF"));
+            counter++;
+
+            var actor = Context.ActorOf<ItemActor>($"{counter}");
+            actor.Forward(message);
         }
     }
 }

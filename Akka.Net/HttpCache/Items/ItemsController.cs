@@ -19,16 +19,12 @@ namespace HttpCache.Items
             var message = new GetItemRequest(id, $"{Request.Headers.IfMatch}");
             var result = await ActorEnvironment.Current.ItemsGateway.Ask<GetItemResponse>(message);
 
+            if (!result.Exists)
+                return Request.CreateResponse(HttpStatusCode.NotFound);
             if (!result.HasBeenModified)
                 return Request.CreateResponse(HttpStatusCode.NotModified);
 
-            var model = new GetModel
-            {
-                Id = result.Id,
-                Code = result.Code,
-                Description = result.Description,
-                Value = result.Value
-            };
+            var model = new GetModel { Id = result.Id, Code = result.Code, Description = result.Description, Value = result.Value };
             var response = Request.CreateResponse(HttpStatusCode.OK, model);
             response.Headers.ETag = new EntityTagHeaderValue(string.Concat("\"", result.ETag, "\""));
 

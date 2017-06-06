@@ -19,8 +19,11 @@ namespace HttpCache.Items
 
         private void HandleGetItem(GetItemRequest request)
         {
-            var item = items.Single(x => x.Id == request.Id);
-            Sender.Tell(GetItemResponse.FromStore(item.Id, item.Code, item.Description, item.Value, item.ETag));
+            var item = items.SingleOrDefault(x => x.Id == request.Id);
+            var message = item == null
+                ? GetItemResponse.DoesNotExist(request.Id)
+                : GetItemResponse.FromStore(item.Id, item.Code, item.Description, item.Value, item.ETag);
+            Sender.Tell(message);
         }
 
         private void HandleStoreItem(StoreItem message)

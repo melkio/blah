@@ -11,14 +11,13 @@ namespace HttpCache
         private readonly ActorSystem system;
 
         public IActorRef ItemsGateway { get; }
-        public IActorRef ItemsStore { get; }
 
         private ActorEnvironment()
         {
             system = ActorSystem.Create("HttpCache");
 
-            ItemsGateway = system.ActorOf<ItemsGatewayActor>();
-            ItemsStore = system.ActorOf<InMemoryItemsStoreActor>();
+            var store = system.ActorOf<InMemoryItemsStoreActor>();
+            ItemsGateway = system.ActorOf(Props.Create(() => new ItemsGatewayActor(store)));
         }
 
         public static ActorEnvironment Current => environment.Value;

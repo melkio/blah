@@ -2,10 +2,10 @@
 {
     public class CreateItemResponse
     {
-        public string Id { get; }
+        public int Id { get; }
         public string ETag { get; }
 
-        public CreateItemResponse(string id, string eTag)
+        public CreateItemResponse(int id, string eTag)
         {
             ETag = eTag;
             Id = id;

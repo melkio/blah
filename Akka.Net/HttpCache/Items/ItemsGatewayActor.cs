@@ -28,8 +28,8 @@ namespace HttpCache.Items
             var eTag = ComputeETag(request.Code, request.Description, request.Value);
             cache.Add(id, eTag);
 
-            store.Tell(new StoreItem(id.ToString(), request.Code, request.Description, request.Value, eTag));
-            Sender.Tell(new CreateItemResponse(id.ToString(), eTag));
+            store.Tell(new StoreItem(id, request.Code, request.Description, request.Value, eTag));
+            Sender.Tell(new CreateItemResponse(id, eTag));
         }
 
         private static string ComputeETag(int code, string description, double value)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Akka.Actor;
 using HttpCache.Items.Messages;
 
@@ -12,7 +13,14 @@ namespace HttpCache.Items
         {
             items = new List<Item>();
 
+            Receive<GetItemRequest>(request => HandleGetItem(request));
             Receive<StoreItem>(message => HandleStoreItem(message));
+        }
+
+        private void HandleGetItem(GetItemRequest request)
+        {
+            var item = items.Single(x => x.Id == request.Id);
+            Sender.Tell(new GetItemResponse(item.Id, item.Code, item.Description, item.Value, item.ETag));
         }
 
         private void HandleStoreItem(StoreItem message)

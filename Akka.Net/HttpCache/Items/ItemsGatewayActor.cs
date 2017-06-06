@@ -17,7 +17,13 @@ namespace HttpCache.Items
             this.store = store;
             cache = new Dictionary<int, string>();
 
-            Receive<CreateItemRequest>(message => HandleCreateItem(message));
+            Receive<GetItemRequest>(request => HandleGetItem(request));
+            Receive<CreateItemRequest>(request => HandleCreateItem(request));
+        }
+
+        private void HandleGetItem(GetItemRequest request)
+        {
+            store.Forward(request);
         }
 
         private void HandleCreateItem(CreateItemRequest request)

@@ -12,6 +12,26 @@ namespace HttpCache.Items
     [RoutePrefix("api/items")]
     public partial class ItemsController : ApiController
     {
+        [Route("{id}")]
+        [HttpGet]
+        public async Task<HttpResponseMessage> Get(int id)
+        {
+            var message = new GetItemRequest(id, $"{Request.Headers.IfMatch}");
+            var result = await ActorEnvironment.Current.ItemsGateway.Ask<GetItemResponse>(message);
+
+            var model = new GetModel
+            {
+                Id = result.Id,
+                Code = result.Code,
+                Description = result.Description,
+                Value = result.Value
+            };
+            var response = Request.CreateResponse(HttpStatusCode.OK, model);
+            response.Headers.ETag = new EntityTagHeaderValue(string.Concat("\"", result.ETag, "\""));
+
+            return response;
+        }
+
         [Route]
         [HttpPost]
         public async Task<HttpResponseMessage> Post(PostModel payload)

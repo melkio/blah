@@ -123,6 +123,8 @@
     <Compile Include="EchoController.cs" />
     <Compile Include="Items\Messages\CreateItemRequest.cs" />
     <Compile Include="Items\Messages\CreateItemResponse.cs" />
+    <Compile Include="Items\Messages\GetItemRequest.cs" />
+    <Compile Include="Items\Messages\GetItemResponse.cs" />
     <Compile Include="Items\Messages\StoreItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

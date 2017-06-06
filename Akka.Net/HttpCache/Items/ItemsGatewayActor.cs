@@ -23,6 +23,11 @@ namespace HttpCache.Items
 
         private void HandleGetItem(GetItemRequest request)
         {
+            if (cache.ContainsKey(request.Id) && cache[request.Id] == request.ETag)
+            {
+                Sender.Tell(GetItemResponse.HasNotBeenModified(request.Id, request.ETag));
+                return;
+            }
             store.Forward(request);
         }
 

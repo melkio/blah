@@ -19,6 +19,9 @@ namespace HttpCache.Items
             var message = new GetItemRequest(id, $"{Request.Headers.IfMatch}");
             var result = await ActorEnvironment.Current.ItemsGateway.Ask<GetItemResponse>(message);
 
+            if (!result.HasBeenModified)
+                return Request.CreateResponse(HttpStatusCode.NotModified);
+
             var model = new GetModel
             {
                 Id = result.Id,

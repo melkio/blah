@@ -20,7 +20,7 @@ namespace HttpCache.Items
         private void HandleGetItem(GetItemRequest request)
         {
             var item = items.Single(x => x.Id == request.Id);
-            Sender.Tell(new GetItemResponse(item.Id, item.Code, item.Description, item.Value, item.ETag));
+            Sender.Tell(GetItemResponse.FromStore(item.Id, item.Code, item.Description, item.Value, item.ETag));
         }
 
         private void HandleStoreItem(StoreItem message)

@@ -9,20 +9,24 @@ namespace EventSourcing.Actors
 {
     public class CartsGateway : ReceiveActor
     {
+        private readonly IActorRef store;
         private readonly Dictionary<Guid, IActorRef> pendingOperations;
 
-        public CartsGateway()
+        public CartsGateway(IActorRef store)
         {
+            this.store = store;
             pendingOperations = new Dictionary<Guid, IActorRef>();
 
             Receive<InitializeCartCommand>(command => Handle(command));
             Receive<AddItemCommand>(command => Handle(command));
             Receive<RemoveItemCommand>(command => Handle(command));
 
-            Receive<CartInitializedEvent>(message => Handle(message));
-            Receive<ItemAddedEvent>(message => Handle(message));
-            Receive<ItemRemovedEvent>(message => Handle(message));
+            Receive<CartInitializedEvent>(message => this.store.Tell(new StoreEvents(message.CommandId, new object[] { message })));
+            Receive<ItemAddedEvent>(message => this.store.Tell(new StoreEvents(message.CommandId, new object[] { message })));
+            Receive<ItemRemovedEvent>(message => this.store.Tell(new StoreEvents(message.CommandId, new object[] { message })));
             Receive<CommandFailed>(message => Handle(message));
+
+            Receive<EventsStored>(message => Handle(message));
         }
 
         private void Handle(InitializeCartCommand command)
@@ -46,24 +50,24 @@ namespace EventSourcing.Actors
             pendingOperations.Add(command.Id, Sender);
         }
 
-        private void Handle(CartInitializedEvent message)
-        {
-            ReplyToSender(message.CommandId, () => new CommandHandled(message.CommandId));
-        }
-
         private void Handle(ItemAddedEvent message)
         {
-            ReplyToSender(message.CommandId, () => new CommandHandled(message.CommandId));
+            store.Tell(new StoreEvents(message.CommandId, new object[] { message }));
         }
 
         private void Handle(ItemRemovedEvent message)
         {
-            ReplyToSender(message.CommandId, () => new CommandHandled(message.CommandId));
+            store.Tell(new StoreEvents(message.CommandId, new object[] { message }));
         }
 
         private void Handle(CommandFailed message)
         {
             ReplyToSender(message.CommandId, () => message);
+        }
+
+        private void Handle(EventsStored message)
+        {
+            ReplyToSender(message.CommandId, () => new CommandHandled(message.CommandId));
         }
 
         private IActorRef GetCart(string cartId)

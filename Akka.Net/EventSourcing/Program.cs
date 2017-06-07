@@ -2,6 +2,7 @@
 using Akka.Actor;
 using EventSourcing.Actors;
 using EventSourcing.Messages.Commands;
+using EventSourcing.Messages.Events;
 
 namespace EventSourcing
 {
@@ -11,7 +12,13 @@ namespace EventSourcing
         {
             var system = ActorSystem.Create("EventSourcing");
 
-            var gateway = system.ActorOf<CartsGateway>("carts");
+            var store = system.ActorOf<CartStore>("store");
+            var gateway = system.ActorOf(Props.Create(() => new CartsGateway(store)), "carts");
+            //var logger = system.ActorOf<ConsoleLogger>("logger");
+
+            //system.EventStream.Subscribe(logger, typeof(CartInitializedEvent));
+            //system.EventStream.Subscribe(logger, typeof(ItemAddedEvent));
+            //system.EventStream.Subscribe(logger, typeof(ItemRemovedEvent));
 
             var inbox = Inbox.Create(system);
             inbox.Send(gateway, new InitializeCartCommand(Guid.NewGuid(), "Cart1", "melkio"));

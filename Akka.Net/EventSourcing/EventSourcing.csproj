@@ -57,14 +57,18 @@
   <ItemGroup>
     <Compile Include="Actors\Cart.cs" />
     <Compile Include="Actors\CartsGateway.cs" />
+    <Compile Include="Actors\CartStore.cs" />
+    <Compile Include="Actors\ConsoleLogger.cs" />
     <Compile Include="Messages\CommandHandled.cs" />
     <Compile Include="Messages\Commands\AddItemCommand.cs" />
     <Compile Include="Messages\Commands\InitializeCartCommand.cs" />
     <Compile Include="Messages\Commands\RemoveItemCommand.cs" />
+    <Compile Include="Messages\EventsStored.cs" />
     <Compile Include="Messages\Events\CartInitializedEvent.cs" />
     <Compile Include="Messages\CommandFailed.cs" />
     <Compile Include="Messages\Events\ItemAddedEvent.cs" />
     <Compile Include="Messages\Events\ItemRemovedEvent.cs" />
+    <Compile Include="Messages\StoreEvents.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
